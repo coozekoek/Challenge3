@@ -37,7 +37,7 @@ public class MyProtocol implements IMACProtocol {
 		//if previous transmit was succesful check the controllInfo
 		} else if (previousMediumState == MediumState.Succes) {
 			//if controlInformation is myControl, treat as CTS
-			if (controlInformation == myControl && previousQueueLength == localQueueLength) {
+			if (controlInformation == myControl && (previousQueueLength - localQueueLength) < 5) {
 				System.out.println("SLOT - Sending data");
 				return new TransmissionInfo(TransmissionType.Data, myControl);
 			//if controlInformation is not myControl, treat as NCTS (not clear to send)
