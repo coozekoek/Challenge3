@@ -12,6 +12,7 @@ public class MyProtocol implements IMACProtocol {
 	int timeOut = 0;
 	//use full reach of the integer values to minimize the chance for same controlInfo for 2 clients
 	int myControl = new Random().nextInt((int) Math.pow(2, 32));
+	int previousQueueLength;
 	
 	@Override
 	public TransmissionInfo TimeslotAvailable(MediumState previousMediumState,
@@ -30,12 +31,13 @@ public class MyProtocol implements IMACProtocol {
 		
 		//if channel is free try to send control int
 		if (previousMediumState == MediumState.Idle) {
+			previousQueueLength = localQueueLength;
 			System.out.println("SLOT - Sending RTS and hope for no collision.");
 			return new TransmissionInfo(TransmissionType.NoData, myControl);
 		//if previous transmit was succesful check the controllInfo
 		} else if (previousMediumState == MediumState.Succes) {
 			//if controlInformation is myControl, treat as CTS
-			if (controlInformation == myControl) {
+			if (controlInformation == myControl && previousQueueLength == localQueueLength) {
 				System.out.println("SLOT - Sending data");
 				return new TransmissionInfo(TransmissionType.Data, myControl);
 			//if controlInformation is not myControl, treat as NCTS (not clear to send)
