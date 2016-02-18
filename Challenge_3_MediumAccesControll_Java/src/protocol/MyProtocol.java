@@ -16,12 +16,12 @@ public class MyProtocol implements IMACProtocol {
 			int controlInformation, int localQueueLength) {
 		// No data to send, just be quiet
 		if (localQueueLength == 0) {
-			System.out.println("SLOT - No data to send.");
+			System.out.println("SLOT - No data to send." + controlInformation);
 			return new TransmissionInfo(TransmissionType.Silent, 0);
 		}
 
 		if ((previousMediumState == MediumState.Idle || previousMediumState == MediumState.Succes) && timeOut == 0) {
-			System.out.println("SLOT - Sending data and hope for no collision.");
+			System.out.println("SLOT - Sending data and hope for no collision."  + controlInformation);
 			return new TransmissionInfo(TransmissionType.Data, 0);
 		} else if (previousMediumState == MediumState.Collision) {
 			timeOut = new Random().nextInt(4);
